@@ -1,0 +1,12 @@
+--- hsc2hs.orig/template-hsc.h	2024-06-19 16:43:10.893708694 +0000
++++ hsc2hs/template-hsc.h	2024-06-19 16:42:15.209200635 +0000
+@@ -72,6 +72,9 @@
+ #define hsc_size(t) \
+     printf("(%ld)", (long) sizeof(t));
+ 
++#define hsc_alignment(t) \
++    printf("(%ld)", (long) __alignof(t));
++
+ #define hsc_enum(t, f, print_name, x)         \
+     print_name;                               \
+     printf (" :: %s\n", #t);                  \

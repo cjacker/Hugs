@@ -178,13 +178,22 @@ sigHandler(breakHandler) {              /* respond to break interrupt      */
 /* --------------------------------------------------------------------------
  * Stack overflow handler:
  * ------------------------------------------------------------------------*/
-void stackOverflow(int emergency, stackoverflow_context_t scp) {
-    sigsegv_leave_handler();
+void stackOverflow_continuation(void *arg1, void *arg2, void *arg3) {
+    int emergency = (intptr_t)(arg1);
     breakOn(TRUE);
     if (emergency)
 	fatal("Stack overflow");
     else
 	hugsStackOverflow();
+    /*NOTREACHED*/
+}
+void stackOverflow(int emergency, stackoverflow_context_t scp) {
+#if LIBSIGSEGV_VERSION >= 0x0206
+    sigsegv_leave_handler(stackOverflow_continuation, (void *)(intptr_t)(emergency), NULL, NULL);
+#else
+    sigsegv_leave_handler();
+    stackOverflow_continuation((void *)(intptr_t)(emergency), NULL, NULL);
+#endif
     /*NOTREACHED*/
 }
 #endif

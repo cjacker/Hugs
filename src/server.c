@@ -274,6 +274,8 @@ HugsServerAPI* hserv; {
  * ------------------------------------------------------------------------*/
 #ifndef NO_DYNAMIC_TYPES
 static Name  nameRunDyn;
+static Name  nameRunDynInt;
+static Name  nameRunDynAddr;
 static Name  nameDynApp;
 static Name  nameToDyn;
 static Name  nameCoerceDynamic;
@@ -282,12 +284,16 @@ static Class classTypeable;
 static Bool linkDynamic()
 {
     nameRunDyn        = findName(findText("runDyn"));
+    nameRunDynInt     = findName(findText("runDynInt"));
+    nameRunDynAddr    = findName(findText("runDynAddr"));
     nameDynApp        = findName(findText("dynApp"));
     nameToDyn         = findName(findText("toDyn"));
     nameCoerceDynamic = findName(findText("coerceDynamic"));
     classTypeable     = findClass(findText("Typeable"));
 
     return (   nonNull(nameRunDyn        )
+	    && nonNull(nameRunDynInt     )
+	    && nonNull(nameRunDynAddr    )
 	    && nonNull(nameDynApp        )
 	    && nonNull(nameToDyn         )
 	    && nonNull(nameCoerceDynamic )
@@ -707,7 +713,7 @@ static Int DoIO_Int(int* phval)
         StackPtr oldsp = sp;
         startEval();
 #ifndef NO_DYNAMIC_TYPES
-        ok = safeEval(ap(nameIORun,ap(nameRunDyn,pop())));
+        ok = safeEval(ap(nameIORun,ap(nameRunDynInt,pop())));
 #else
         ok = safeEval(ap(nameIORun,pop()));
 #endif
@@ -748,7 +754,7 @@ static Int DoIO_Addr(void** phval)
         StackPtr oldsp = sp;
         startEval();
 #ifndef NO_DYNAMIC_TYPES
-        ok = safeEval(ap(nameIORun,ap(nameRunDyn,pop())));
+        ok = safeEval(ap(nameIORun,ap(nameRunDynAddr,pop())));
 #else
         ok = safeEval(ap(nameIORun,pop()));
 #endif

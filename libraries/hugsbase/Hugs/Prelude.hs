@@ -977,11 +977,12 @@ instance RealFloat Float where
     floatRange  _ = (primFloatMinExp, primFloatMaxExp)
     encodeFloat = primFloatEncode
     decodeFloat = primFloatDecode
-    isNaN       _ = False
-    isInfinite  _ = False
-    isDenormalized _ = False
-    isNegativeZero _ = False
-    isIEEE      _ = False
+    isNaN       x = not (x == x)
+    isInfinite  x = recip x == 0
+    isDenormalized x = x /= 0 && abs x < smallestNormal
+      where smallestNormal = encodeFloat 1 (fst (floatRange x) - 1)
+    isNegativeZero x = x == 0 && 1 / x < 0
+    isIEEE      _ = True
 
 primitive primDoubleRadix  :: Integer
 primitive primDoubleDigits :: Int
@@ -996,11 +997,12 @@ instance RealFloat Double where
     floatRange  _ = (primDoubleMinExp, primDoubleMaxExp)
     encodeFloat   = primDoubleEncode
     decodeFloat   = primDoubleDecode
-    isNaN       _ = False
-    isInfinite  _ = False
-    isDenormalized _ = False
-    isNegativeZero _ = False
-    isIEEE      _ = False
+    isNaN       x = not (x == x)
+    isInfinite  x = recip x == 0
+    isDenormalized x = x /= 0 && abs x < smallestNormal
+      where smallestNormal = encodeFloat 1 (fst (floatRange x) - 1)
+    isNegativeZero x = x == 0 && 1 / x < 0
+    isIEEE      _ = True
 
 instance Enum Float where
     succ x                = x+1
