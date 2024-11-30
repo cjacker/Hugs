@@ -2289,7 +2289,7 @@ void*  dll; {
  * the above mechanisms.
  * ------------------------------------------------------------------------*/
 
-#define BUFSIZE 1000
+#define BUFSIZE 10000
 static char buffer[BUFSIZE];
 static Int used = 0;
 static Void local insert     Args((String));
